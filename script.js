@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DATA --- 
     const userData = {
         name: "İLKANƏ <span class='highlight'>QASIMOVA</span>",
         title: "STUDENT",
@@ -37,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
     };
 
-    // --- ADD DATA TO PAGE ---
     document.getElementById('userName').innerHTML = userData.name;
     document.getElementById('userTitle').textContent = userData.title;
 
@@ -87,12 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('certificationsInfo').innerHTML = createCertifications(userData.certifications);
     document.getElementById('projectsInfo').innerHTML = createProjects(userData.projects);
 
-    // --- OLD FUNCTIONS (Edit, Save, Accordion, Zip) ---
     const editBtn = document.getElementById('editBtn');
     const accordionBtns = document.querySelectorAll('.accordion-btn');
     let isEditing = false;
 
-    // Accordion open/close
     accordionBtns.forEach(button => {
         button.addEventListener('click', () => {
             const panel = button.nextElementSibling;
@@ -106,31 +102,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Toggle edit mode
     editBtn.addEventListener('click', () => {
         isEditing = !isEditing;
         editBtn.textContent = isEditing ? 'Save' : 'Edit';
 
-        // Open Accordion panels
         accordionBtns.forEach(btn => {
             const panel = btn.nextElementSibling;
             panel.classList.add('active');
             panel.style.maxHeight = "300px";
         });
 
-        // Activate all editable fields
         const editableElements = document.querySelectorAll('h1, h3, .accordion-panel p, .accordion-panel li, .accordion-panel .editable');
         editableElements.forEach(el => {
             el.setAttribute('contenteditable', isEditing);
         });
 
-        // Save
         if (!isEditing) {
             downloadFiles();
         }
     });
 
-    // Add a new line on Enter key
     const panels = document.querySelectorAll('.accordion-panel');
     panels.forEach(panel => {
         panel.addEventListener('keydown', e => {
@@ -142,15 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Download the page as ZIP
     async function downloadFiles() {
         const zip = new JSZip();
 
-        // Add HTML file
         const html = document.documentElement.outerHTML;
         zip.file("index.html", html);
 
-        // Add CSS file
         const cssPath = Array.from(document.styleSheets).find(s => s.href && s.href.endsWith("style.css"))?.href;
         if (cssPath) {
             try {
@@ -162,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Add script file
         const scriptPath = Array.from(document.scripts).find(s => s.src && s.src.endsWith("script.js"))?.src;
         if (scriptPath) {
             try {
@@ -174,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Add photos
         const images = [...document.querySelectorAll("img")];
         for (let img of images) {
             const src = img.src;
@@ -189,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Download ZIP
         zip.generateAsync({ type: "blob" }).then(content => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
